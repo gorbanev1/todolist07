@@ -3,11 +3,13 @@ import {useState} from 'react'
 import {v1} from 'uuid'
 import {CreateItemForm} from './CreateItemForm'
 import {TodolistItem} from './TodolistItem'
-import {AppBar, Container, Grid} from "@mui/material";
+import {AppBar, Container, Grid, Paper} from "@mui/material";
 import {Toolbar} from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+import {containerSx} from "./TodolistItem.styles.ts";
+import {NavButton} from './NavButton'
 
 
 export type Todolist = {
@@ -87,18 +89,22 @@ export const App = () => {
 
     return (
         <div className="app">
-            <AppBar position={"static"}>
+            <AppBar position="static" sx={{mb: '30px'}}>
                 <Toolbar>
-                    <Container maxWidth={'xl'}>
+                    <Container maxWidth={'xl'} sx={containerSx}>
                         <IconButton color='inherit'>
                             <MenuIcon/>
                         </IconButton>
+                        <div>
+                            <NavButton color={'inherit'}>Sign in</NavButton>
+                            <NavButton color={'inherit'}>Sign up</NavButton>
+                            <NavButton color={'inherit'}>Faq</NavButton>
+                        </div>
                     </Container>
-                    <Button color={'inherit'}>Sign in</Button>
                 </Toolbar>
             </AppBar>
             <Container maxWidth={"sm"}>
-                <Grid container>
+                <Grid container sx={{mb: "30px"}}>
                     <CreateItemForm onCreateItem={createTodolist}/>
                 </Grid>
             </Container>
@@ -115,17 +121,20 @@ export const App = () => {
 
                     return (
                         <Grid key={todolist.id}>
-                            <TodolistItem key={todolist.id}
-                                          todolist={todolist}
-                                          tasks={filteredTasks}
-                                          deleteTask={deleteTask}
-                                          changeFilter={changeFilter}
-                                          createTask={createTask}
-                                          changeTaskStatus={changeTaskStatus}
-                                          deleteTodolist={deleteTodolist}
-                                          changeTaskTitle={changeTaskTitle}
-                                          changeTodolistTitle={changeTodolistTitle}/>
+                            <Paper sx={{p: '0 20px 20px 20px'}}>
+                                <TodolistItem key={todolist.id}
+                                              todolist={todolist}
+                                              tasks={filteredTasks}
+                                              deleteTask={deleteTask}
+                                              changeFilter={changeFilter}
+                                              createTask={createTask}
+                                              changeTaskStatus={changeTaskStatus}
+                                              deleteTodolist={deleteTodolist}
+                                              changeTaskTitle={changeTaskTitle}
+                                              changeTodolistTitle={changeTodolistTitle}/>
+                            </Paper>
                         </Grid>
+
                     )
                 })}
             </Grid>
