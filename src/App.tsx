@@ -3,13 +3,13 @@ import {useState} from 'react'
 import {v1} from 'uuid'
 import {CreateItemForm} from './CreateItemForm'
 import {TodolistItem} from './TodolistItem'
-import {AppBar, Container, Grid, Paper} from "@mui/material";
+import {AppBar, Container, CssBaseline, Grid, Paper, Switch,} from "@mui/material";
 import {Toolbar} from "@mui/material";
-import Button from "@mui/material/Button";
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import {containerSx} from "./TodolistItem.styles.ts";
 import {NavButton} from './NavButton'
+import {ThemeProvider, createTheme} from "@mui/material/styles";
 
 
 export type Todolist = {
@@ -23,12 +23,30 @@ export type Task = {
     title: string
     isDone: boolean
 }
+type ThemeMode = 'dark'|'light'
+
+
 
 export type FilterValues = 'all' | 'active' | 'completed'
 
 export type TasksState = Record<string, Task[]>
 
 export const App = () => {
+    const [themeMode, setThemeMode ]=useState<ThemeMode>('light')
+    const theme = createTheme({
+        palette: {
+            mode: themeMode,
+            primary: {
+                main: '#ef6c00'
+            }
+        }
+    })
+
+    const changeMode=()=>{
+        setThemeMode(themeMode==='light'?'dark':'light')
+    }
+
+
     const todolistId1 = v1()
     const todolistId2 = v1()
 
@@ -87,22 +105,27 @@ export const App = () => {
         setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title} : task)})
     }
 
+
     return (
         <div className="app">
-            <AppBar position="static" sx={{mb: '30px'}}>
-                <Toolbar>
-                    <Container maxWidth={'xl'} sx={containerSx}>
-                        <IconButton color='inherit'>
-                            <MenuIcon/>
-                        </IconButton>
-                        <div>
-                            <NavButton color={'inherit'}>Sign in</NavButton>
-                            <NavButton color={'inherit'}>Sign up</NavButton>
-                            <NavButton color={'inherit'}>Faq</NavButton>
-                        </div>
-                    </Container>
-                </Toolbar>
-            </AppBar>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                <AppBar position="static" sx={{mb: '30px'}}>
+                    <Toolbar>
+                        <Container maxWidth={'xl'} sx={containerSx}>
+                            <IconButton color='inherit'>
+                                <MenuIcon/>
+                            </IconButton>
+                            <div>
+                                <NavButton >Sign in</NavButton>
+                                <NavButton >Sign up</NavButton>
+                                <NavButton  background={theme.palette.primary.dark}>Faq</NavButton>
+                                <Switch color={'default'} onChange={changeMode}/>
+                            </div>
+                        </Container>
+                    </Toolbar>
+                </AppBar>
+            </ThemeProvider>
             <Container maxWidth={"sm"}>
                 <Grid container sx={{mb: "30px"}}>
                     <CreateItemForm onCreateItem={createTodolist}/>
